@@ -1,4 +1,4 @@
-avo-desktop
-===========
+MiniBrowser for movie
+======================
 
-Desktop version of avodao
+Half full screen

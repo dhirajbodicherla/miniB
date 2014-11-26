@@ -1,0 +1,21 @@
+{
+  "main": "index.html",
+  "name": "miniB",
+  "description": "Browser for movie watchers",
+  "version": "0.1.0",
+  "keywords": [ "movie", "Browser" ],
+  "window": {
+    "title": "miniB",
+    "icon": "icon.png",
+    "toolbar": false,
+    "frame": false,
+    "width": 800,
+    "height": 500,
+    "position": "mouse",
+    "resizable": true
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "single-instance": false
+}

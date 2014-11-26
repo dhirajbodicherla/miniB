@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+        .url-bar{
+            margin-top: 25px;
+        }
+        .url-bar .url-input-container{
+          position:absolute; 
+          height: 30px;
+          top: 10px;
+          left: 10px;
+          right: 60px;
+
+        }
+        .url-bar .url-input-container #url{
+          position: absolute;
+          width: 98%;
+          left: 0;
+          right: 0px;
+          top: 0px;
+          bottom: 0px;
+          font-size: 15px;
+          font-family: Helvetica;
+        }
+        .url-bar .url-input-container #url:focus{
+          outline: none;
+        }
+        .url-bar .fetch-container{
+          position :absolute;
+          right: 10px;
+          top: 10px;
+          height: 30px;
+          float: right;
+          
+        }
+        .url-bar #fetch{
+          height: 30px;
+          border: none;
+          color: white;
+          background: #666;
+        }
+        .url-bar #fetch:hover{
+          cursor: pointer;
+        }
+    </style>
+</head>
+<body style="-webkit-app-region: drag">
+    <div class="url-bar">
+      <div class="url-input-container">
+        <input type="text" id="url" />
+      </div>
+      <div class="fetch-container">
+        <input type="button" id="fetch" value="Fetch"/>
+      </div>
+    </div>
+    <script type="text/javascript">
+        var gui = require('nw.gui');
+        win = gui.Window.get();
+        var clipboard = gui.Clipboard.get();
+        var urlInput = document.getElementById("url");
+        var fetchButton = document.getElementById("fetch");
+        // var hide = document.getElementById("hide");
+        // hide.addEventListener('click', function(){
+        //     win.frame = false;
+        // });
+        fetchButton.addEventListener('click', function(){
+            var url = urlInput.value;
+            start(url);
+        });
+        urlInput.addEventListener('keydown', function(e) {
+            if (e.which == 86) {
+                if (e.metaKey || e.ctrlKey) {
+                    urlInput.value = clipboard.get('text');
+                } 
+            }
+        });
+        
+
+        function start(url){
+            window.location.href = url;
+            win.on('minimize', function () {
+                this.hide();
+                tray();
+            });
+        }
+
+        function tray() {
+            var tray = new gui.Tray({
+                icon: 'icon.png'
+            });
+            
+            var menu = new gui.Menu();
+            menu.append(new gui.MenuItem({
+                label: 'Show',
+                click: function () {
+                    win.show();
+                    tray.remove();
+                    tray = null;
+                }
+            }));
+            menu.append(new gui.MenuItem({
+                label: 'Quit',
+                click: function () {
+                    tray.remove();
+                    tray = null;
+                    win.close();
+                }
+            }));
+            tray.menu = menu;
+        }
+        
+    </script>
+</body>
+</html>

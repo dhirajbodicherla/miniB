@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="bootstrap.css" media="screen">
+    <style type="text/css">
+    body{
+      margin: 10%;
+    }
+    form .form-control{
+      background: transparent;
+      border-bottom: 2px dashed rgba(255,255,255,0.3);
+      color: white;
+      font-size: 18px;
+    }
+    form .form-control:focus{
+      border-bottom: 2px dashed rgba(255,255,255,0.9);
+    }
+    #register-form{
+      display: none;
+    }
+    </style>
+    <!--
+    <style type="text/css">
+        /*.url-bar{
+            margin-top: 25px;
+        }
+        .url-bar .url-input-container{
+          position:absolute; 
+          height: 30px;
+          top: 10px;
+          left: 10px;
+          right: 60px;
+
+        }
+        .url-bar .url-input-container #url{
+          position: absolute;
+          width: 98%;
+          left: 0;
+          right: 0px;
+          top: 0px;
+          bottom: 0px;
+          font-size: 15px;
+          font-family: Helvetica;
+        }
+        .url-bar .url-input-container #url:focus{
+          outline: none;
+        }
+        .url-bar .fetch-container{
+          position :absolute;
+          right: 10px;
+          top: 10px;
+          height: 30px;
+          float: right;
+          
+        }
+        .url-bar #fetch{
+          height: 30px;
+          border: none;
+          color: white;
+          background: #666;
+        }
+        .url-bar #fetch:hover{
+          cursor: pointer;
+        }*/
+    </style>-->
+</head>
+<body style="-webkit-app-region: drag">
+  <form class="form-horizontal" id="login-form">
+    <fieldset>
+      <legend><h2><img src="icons/32x32.png"></img>Login</h2></legend>
+      <div class="form-group">
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="email-login" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10">
+          <input type="password" class="form-control" id="password-login" placeholder="Password">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+          <!-- <button class="btn btn-default">Cancel</button> -->
+          <button type="submit" class="btn btn-primary" id="login-btn">Login</button>
+          <a href="#" class="btn btn-link" id="register-link">Register</a>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <form class="form-horizontal" id="register-form">
+    <fieldset>
+      <legend><h2><img src="icons/32x32.png"></img>Register</h2></legend>
+      <div class="form-group">
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="email-register" name="userEmail" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10">
+          <input type="password" class="form-control" id="password-register" placeholder="Password" name="userPassword">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-10 col-lg-offset-2">
+          <button type="submit" class="btn btn-primary" id="register-btn">Register</button>
+          <button class="btn btn-default" id="cancel-register">Cancel</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+    <!-- <div class="url-bar">
+      <div class="url-input-container">
+        <input type="text" id="url" />
+      </div>
+      <div class="fetch-container">
+        <input type="button" id="fetch" value="Fetch"/>
+      </div>
+    </div> -->
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="https://minib-app.herokuapp.com/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        var gui = require('nw.gui');
+        gui.Screen.Init();
+        var screens = gui.Screen.screens;
+        win = gui.Window.get();
+        var clipboard = gui.Clipboard.get();
+
+        var listOfTVs, socket, tray, noTVsItem, ID;
+
+        var x = 0, y =  screens[0].bounds.height - screens[0].work_area.height;
+        var tvHeight = Math.floor(screens[0].work_area.height / 2);
+        var tvWidth = Math.floor(screens[0].bounds.width/2);
+        var serverAddress = 'https://minib-app.herokuapp.com/';
+
+        if(localStorage.getItem('miniBUser') != null){
+          ID = localStorage.getItem('miniBUser');
+          showContent();
+          connect();
+        }else{
+          showLogin();
+        }
+
+        function saveUser(){
+          localStorage.setItem('miniBUser', ID);
+        }
+        function showContent(){
+          win.hide();
+          win.setShowInTaskbar(false);
+        }
+        function showLogin(){
+          win.show();
+          win.setShowInTaskbar(true);
+          this.win.moveTo(x + tvWidth/2, y + tvHeight/2);
+          this.win.resizeTo(tvWidth, tvHeight);
+        }
+        function connect(){
+
+          tray = new gui.Tray({
+              icon: 'images/trayicon-16x16.png'
+          });
+
+          listOfTVs = [];
+          socket = io(serverAddress, {port: ''});
+          socket.on('connect', function(){
+            socket.emit('login', {
+              id: ID,
+              type: 'tv'
+            });
+          });
+          socket.on('start_tv', function(tv){
+            if(listOfTVs.length > 4) return;
+            
+            listOfTVs.push(new TV(tv));
+            updateTray();
+          });
+          
+          tray.menu = new gui.Menu();
+
+          noTVsItem = new gui.MenuItem({
+              label: 'No TV\'s yet',
+              enabled: false
+          });
+          tray.menu.append(noTVsItem);
+          
+          tray.menu.append(new gui.MenuItem({
+            type: 'separator'
+          }));
+          tray.menu.append(new gui.MenuItem({
+            label: 'Quit',
+            click: function(){
+              gui.App.quit();
+            }
+          }));
+        }
+        
+        function TV(tv){
+          var self = this;
+          this.win = gui.Window.open(tv.url,{
+            "title": tv.title,
+            "toolbar": false,
+            "frame": false,
+          });
+          this.item = new gui.MenuItem({
+              label: tv.title,
+              click: function () {
+                  self.win.close();
+                  tray.menu.remove(self.item);
+                  listOfTVs = $.grep(listOfTVs, function(fn){ return fn !== self; });
+                  updateTray();
+              }
+          });
+          tray.menu.insert(this.item, listOfTVs.length);
+          if(listOfTVs.length == 0){
+            tray.menu.remove(noTVsItem);
+          }
+          this.win.resizeTo(tvWidth, tvHeight);
+          /*
+           * @check_later
+           * can improve this A LOT
+           */
+          var tvsLength = parseInt(listOfTVs.length,10);
+          if(tvsLength === 0){
+            this.win.moveTo(x, y);
+          }else if(tvsLength === 1){
+            this.win.moveTo(x, y + tvHeight);
+          }else if(tvsLength === 2){
+            this.win.moveTo(x + tvWidth, y);
+          }else{
+            this.win.moveTo(x + tvWidth, y + tvHeight);
+          }
+          
+          return this;
+        }
+        function updateTray(){
+          if(listOfTVs.length == 0){
+            tray.menu.insert(noTVsItem, 0);
+          }
+        }
+
+        $(document).ready(function(){
+          $('#register-link').click(function(e){
+            e.preventDefault();
+
+            $('#login-form').fadeOut('fast', function(){
+              $('#register-form').fadeIn();
+            });
+          });
+          $('#cancel-register').click(function(e){
+            e.preventDefault();
+
+            $('#register-form').fadeOut('fast', function(){
+              $('#login-form').fadeIn();
+            });
+          });
+
+          $('#register-form').submit(function(e){
+            e.preventDefault();
+            var self = this;
+            var formData = {
+              userEmail: $('#email-register').val(),
+              userPassword: $('#password-register').val()
+            };
+            $.ajax({
+              type: 'POST',
+              url: serverAddress + 'api/register',
+              data: JSON.stringify(formData),
+              dataType: 'JSON',
+              success: function(result){
+                if(result){
+                  $(self).fadeOut();
+                  ID = result.id;
+                  saveUser();
+                  showContent();
+                  connect();
+                }
+              },
+              error: function(){
+                alert('please try again');
+              }
+            })
+          });
+
+          $('#login-form').submit(function(e){
+            e.preventDefault();
+            var self = this;
+            var formData = {
+              userEmail: $('#email-login').val(),
+              userPassword: $('#password-login').val()
+            };
+            $.ajax({
+              type: 'POST',
+              url: serverAddress + 'api/sign-in',
+              data: JSON.stringify(formData),
+              dataType: 'JSON',
+              success: function(result){
+                if(result){
+                  $(self).fadeOut();
+                  ID = result.id;
+                  saveUser();
+                  showContent();
+                  connect();
+                }
+              },
+              error: function(err){
+                alert('Error. Please try again');
+              }
+            });
+          });
+        });
+        
+    </script>
+</body>
+</html>

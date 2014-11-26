@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Server</title>
+</head>
+<body>
+<input type="text" id="url-input" />
+<input type="button" id="start-tv" value="Start TV" disabled/>
+<script src="https://minib-app-c9-dhirajbodicherla.c9.io/socket.io/socket.io.js" type="text/javascript"></script>
+<script type="text/javascript">
+	var startTVButton = document.getElementById("start-tv");
+	startTVButton.addEventListener('click', function(){
+		var url = document.getElementById('url-input').value;
+		socket.emit('start_tv', {
+			id: btoa("dhiraj"),
+    		message: url
+		});
+	});
+	var socket = io.connect('https://minib-app-c9-dhirajbodicherla.c9.io/', {port: ''});
+    socket.on('connect', function(){
+    	socket.emit('login', {
+    		id: btoa("dhiraj"),
+    		type: 'controller'
+    	});
+      startTVButton.removeAttribute('disabled');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>MiniB</title>
+  <link rel="stylesheet" type="text/css" href="bootstrap.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<script src="https://minib-app.herokuapp.com/socket.io/socket.io.js"></script>
+<form class="form-horizontal" id="login-form">
+  <fieldset>
+    <legend><h2><img src="32x32.png"></img>Login</h2></legend>
+    <div class="form-group">
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="email-login" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-10">
+        <input type="password" class="form-control" id="password-login" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <!-- <button class="btn btn-default">Cancel</button> -->
+        <button type="submit" class="btn btn-primary" id="login-btn">Login</button>
+        <a href="#" class="btn btn-link" id="register-link">Register</a>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<form class="form-horizontal" id="register-form">
+  <fieldset>
+    <legend><h2><img src="32x32.png"></img>Register</h2></legend>
+    <div class="form-group">
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="email-register" name="userEmail" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-10">
+        <input type="password" class="form-control" id="password-register" placeholder="Password" name="userPassword">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <button type="submit" class="btn btn-primary" id="register-btn">Register</button>
+        <button class="btn btn-default" id="cancel-register">Cancel</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<div id="content">
+  <header>
+    <a href="#" class="btn btn-link" id="logout">Logout</a>
+  </header>
+  <div id="start-tv-btn">
+    <img src="48x48.png"></img> <span>Watch on TV</span>
+  </div>
+  <div id="msg-container">
+  </div>
+  <div id="msg-download-container" class="text-danger">
+    You do not have the miniB desktop app running or installed. <br />
+    To download please visit <a href="#">here</a>
+
+  </div>
+</div>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="popup.js"></script>
+</body>
+</html>

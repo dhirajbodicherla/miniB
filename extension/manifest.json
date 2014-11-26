@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "miniB",
+  "version": "0.2",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "chrome_icon.png"
+  },
+  "icons": {
+    "16": "16x16.png",
+    "32": "32x32.png",
+    "48": "48x48.png",
+    "128": "128x128.png"
+  },
+  "permissions": [
+    "tabs",
+    "notifications",
+    "storage"
+  ],
+  "content_security_policy": "script-src 'self' https://minib-app.herokuapp.com; object-src 'self'; script-src 'self'"
+}

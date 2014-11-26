@@ -1,0 +1,99 @@
+body {
+  
+}
+
+#content {
+  display: none;
+  position: relative;
+  font-family: "Helvetica Neue UltraLight", "Helvetica Neue", "Helvetica Light", Helvetica, Arial;
+  color: #ddd;
+  padding: 12px 15px 52px;
+  border-radius: 2px;
+  font-weight: 200;
+  width: 360px;
+}
+
+h1 {
+  line-height: 1em;
+  padding-bottom: 0.2em;
+  margin: 3px 0;
+  font-weight: 100;
+  font-size: 25px;
+}
+
+a,
+a:visited,
+a:active {
+  color: #ddd;
+}
+
+/* Buttons. */
+
+button,
+input[type="submit"] {
+  display: inline-block;
+  line-height: 1.2em;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: normal;
+  padding: 8px 30px;
+
+  box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, .1);
+
+  background-image: -webkit-linear-gradient(top, #87ae39, #6c9c0d);
+
+  border: none;
+  border-radius: 5px;
+
+  color: #fff;
+  text-shadow: 0px 1px 1px rgba(0,0,0,0.6);
+}
+
+#buttons {
+  bottom: 0;
+  right: 0;
+  padding: 0 21px 21px 0;
+  text-align: right;
+}
+
+#buttons input[type="submit"] {
+  margin-left: 15px;
+}
+
+#start-tv-btn:hover{
+  cursor: pointer;
+}
+#start-tv-btn span{
+  font-size: 20px;
+}
+#register-form, #login-form{
+  position: relative;
+  padding: 12px 15px 52px;
+  width: 360px;
+  display: none;
+}
+form .form-control{
+  background: transparent;
+  border-bottom: 2px dashed rgba(255,255,255,0.3);
+  color: white;
+  font-size: 18px;
+}
+form .form-control:focus{
+  border-bottom: 2px dashed rgba(255,255,255,0.9);
+}
+#register-form{
+  display: none;
+}
+#content header:after{
+  content: '';
+  display: block;
+  clear: both;
+}
+#content header #logout{
+  float: right;
+}
+
+#msg-container, #msg-download-container{
+  display: none;
+}

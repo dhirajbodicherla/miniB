@@ -5,14 +5,17 @@
   "version": "0.1.0",
   "keywords": [ "movie", "Browser" ],
   "window": {
+    "show": false,
+    "show_in_taskbar": false,
     "title": "miniB",
     "icon": "icon.png",
     "toolbar": false,
-    "frame": false,
+    "frame": true,
     "width": 0,
     "height": 0,
     "position": "mouse",
-    "resizable": true
+    "resizable": true,
+    "icon": "icons/128x128.png"
   },
   "webkit": {
     "plugin": true

@@ -57,14 +57,60 @@
     </div>
     <script type="text/javascript">
         var gui = require('nw.gui');
+        gui.Screen.Init();
+        var screens = gui.Screen.screens;
         win = gui.Window.get();
         var clipboard = gui.Clipboard.get();
+        var tray;
         var urlInput = document.getElementById("url");
         var fetchButton = document.getElementById("fetch");
         // var hide = document.getElementById("hide");
         // hide.addEventListener('click', function(){
         //     win.frame = false;
         // });
+        win.minimize();
+        tray();
+        var new_win = gui.Window.open('https://github.com',{
+          "toolbar": false,
+          "frame": false,
+        });
+        var new_win2 = gui.Window.open('https://google.com',{
+          "toolbar": false,
+          "frame": false,
+        });
+        var item = new gui.MenuItem({
+            label: 'Github',
+            click: function () {
+                new_win.close();
+                tray.menu.remove(item);
+                // tray.remove();
+                // tray = null;
+            }
+        });
+        var item2 = new gui.MenuItem({
+            label: 'Google',
+            click: function () {
+                new_win2.close();
+                tray.menu.remove(item2);
+                // tray.remove();
+                // tray = null;
+            }
+        });
+
+        tray.menu.append(item);
+        tray.menu.append(item2);
+        
+        // var new_win = gui.Window.get(
+        //   window.open('https://github.com')
+        // );
+        // var new_wi = gui.Window.get(
+        //   window.open('https://github.com')
+        // );
+        setTimeout(function(){
+          var top = screens[0].bounds.height - screens[0].work_area.height;
+          new_win.resizeTo(Math.floor(screens[0].bounds.width/2),Math.floor(screens[0].work_area.height/2));
+          new_win.moveTo(0,top);
+        }, 1000);
         fetchButton.addEventListener('click', function(){
             var url = urlInput.value;
             start(url);
@@ -87,11 +133,10 @@
         }
 
         function tray() {
-            var tray = new gui.Tray({
-                icon: 'icon.png'
+            tray = new gui.Tray({
+                icon: 'images/trayicon-16x16.png'
             });
-            
-            var menu = new gui.Menu();
+            /*
             menu.append(new gui.MenuItem({
                 label: 'Show',
                 click: function () {
@@ -108,7 +153,8 @@
                     win.close();
                 }
             }));
-            tray.menu = menu;
+            */
+            tray.menu = new gui.Menu();
         }
         
     </script>

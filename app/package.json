@@ -8,7 +8,6 @@
     "show": false,
     "show_in_taskbar": false,
     "title": "miniB",
-    "icon": "icon.png",
     "toolbar": false,
     "frame": true,
     "width": 0,
